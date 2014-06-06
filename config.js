@@ -5,11 +5,16 @@ var fs = require('fs');
 
 var configKeys = ['githubUsername', 'authorName', 'authorEmail', 'authorUrl'];
 
-var _defaultDependencies = [
-  {name: 'lodash', description: 'A utility library'},
-  {name: 'q', description: 'A library for promises'},
-  {name: 'debug', description: 'tiny node.js debugging utility'}
-];
+var _defaultDependencies = [{
+  name: 'lodash',
+  description: 'A utility library'
+}, {
+  name: 'q',
+  description: 'A library for promises'
+}, {
+  name: 'debug',
+  description: 'tiny node.js debugging utility'
+}];
 
 /**
  * The Generator settings
@@ -71,7 +76,7 @@ Config.prototype.getMeta = function getMeta() {
  * @return {Object} Generators metadata
  */
 Config.prototype.setMeta = function storeMeta(options) {
-  configKeys.forEach(function (val) {
+  configKeys.forEach(function(val) {
     if (options[val] && options[val].trim()) {
       this._meta[val] = options[val];
     }
