@@ -10,11 +10,11 @@ var yosay = require('yosay');
 var Config = require('../config');
 
 module.exports = yeoman.generators.Base.extend({
-  initializing: function () {
+  initializing: function() {
     this.settings = new Config();
   },
 
-  prompting: function () {
+  prompting: function() {
     var cb = this.async();
     var log = this.log;
 
@@ -24,10 +24,10 @@ module.exports = yeoman.generators.Base.extend({
       name: 'name',
       message: 'Module Name',
       default: path.basename(process.cwd()),
-      filter: function (input) {
+      filter: function(input) {
         var done = this.async();
 
-        npmName(input, function (err, available) {
+        npmName(input, function(err, available) {
           if (!available) {
             log.info(chalk.yellow(input) + ' already exists on npm. You might want to use another name.');
           }
@@ -64,19 +64,20 @@ module.exports = yeoman.generators.Base.extend({
 
     // Write settings default values back to prompt
     var meta = this.settings.getMeta();
-    prompts.forEach(function (val) {
+    prompts.forEach(function(val) {
       if (meta[val.name]) {
-        val.default = meta[val.name];
+        val.
+        default = meta[val.name];
       }
     }.bind(this));
 
-    this.prompt(prompts, function (props) {
+    this.prompt(prompts, function(props) {
       this.slugname = this._.slugify(props.name);
       this.safeSlugname = this.slugname.replace(
-          /-+([a-zA-Z0-9])/g,
-          function (g) {
-            return g[1].toUpperCase();
-          }
+        /-+([a-zA-Z0-9])/g,
+        function(g) {
+          return g[1].toUpperCase();
+        }
       );
 
       if (props.homepage) {
@@ -115,7 +116,7 @@ module.exports = yeoman.generators.Base.extend({
 
   },
 
-  askForModules: function () {
+  askForModules: function() {
     var cb = this.async();
 
     var prompts = [{
@@ -123,24 +124,23 @@ module.exports = yeoman.generators.Base.extend({
       name: 'modules',
       message: 'Which modules would you like to include?',
       choices: [{
-          value: 'jscsModule',
-          name: 'jscs (JavaScript Code Style checker)',
-          checked: true
-        }, {
-          value: 'releaseModule',
-          name: 'release (Bump npm versions with Gulp)',
-          checked: true
-        }, {
-          value: 'istanbulModule',
-          name: 'istanbul (JS code coverage tool)',
-          checked: true
-        }
-      ]
+        value: 'jscsModule',
+        name: 'jscs (JavaScript Code Style checker)',
+        checked: true
+      }, {
+        value: 'releaseModule',
+        name: 'release (Bump npm versions with Gulp)',
+        checked: true
+      }, {
+        value: 'istanbulModule',
+        name: 'istanbul (JS code coverage tool)',
+        checked: true
+      }]
     }];
 
-    this.prompt(prompts, function (props) {
+    this.prompt(prompts, function(props) {
 
-      var hasMod = function (mod) {
+      var hasMod = function(mod) {
         return props.modules.indexOf(mod) !== -1;
       };
 
@@ -158,7 +158,7 @@ module.exports = yeoman.generators.Base.extend({
           default: true
         }];
 
-        this.prompt(promptCoveralls, function (props) {
+        this.prompt(promptCoveralls, function(props) {
           if (props && props.coverallsModule) {
             this.coverallsModule = props.coverallsModule;
           } else {
@@ -176,7 +176,7 @@ module.exports = yeoman.generators.Base.extend({
 
   },
 
-  askForDependencies: function () {
+  askForDependencies: function() {
     var cb = this.async();
 
     var prompts = [{
@@ -187,7 +187,7 @@ module.exports = yeoman.generators.Base.extend({
     }];
 
     var dependencies = this.settings.getDependencies();
-    dependencies.forEach(function (pkg) {
+    dependencies.forEach(function(pkg) {
       prompts[0].choices.push({
         value: pkg.name,
         name: util.format('%s (%s)', pkg.name, pkg.description),
@@ -195,14 +195,14 @@ module.exports = yeoman.generators.Base.extend({
       });
     });
 
-    this.prompt(prompts, function (props) {
+    this.prompt(prompts, function(props) {
 
-      var hasMod = function (mod) {
+      var hasMod = function(mod) {
         return props.dependencies.indexOf(mod) !== -1;
       };
 
       this.usedDependencies = {};
-      dependencies.forEach(function (dep) {
+      dependencies.forEach(function(dep) {
         if (hasMod(dep.name)) {
           this.usedDependencies[dep.name] = 'latest';
         }
@@ -214,7 +214,7 @@ module.exports = yeoman.generators.Base.extend({
 
   },
 
-  getLatestVersions: function () {
+  getLatestVersions: function() {
     var cb = this.async();
     var count = Object.keys(this.usedDependencies).length;
 
@@ -223,7 +223,9 @@ module.exports = yeoman.generators.Base.extend({
     }
 
     for (var packageName in this.usedDependencies) {
-      npmLatest(packageName, {timeout: 1900}, function (err, result) {
+      npmLatest(packageName, {
+        timeout: 1900
+      }, function(err, result) {
         if (!err && result.name && result.version) {
           this.usedDependencies[result.name] = result.version;
         }
@@ -246,7 +248,7 @@ module.exports = yeoman.generators.Base.extend({
     }
   },
 
-  configuring: function () {
+  configuring: function() {
     this.copy('jshintrc', '.jshintrc');
     this.copy('_gitignore', '.gitignore');
     this.copy('_travis.yml', '.travis.yml');
@@ -260,7 +262,7 @@ module.exports = yeoman.generators.Base.extend({
     this.template('_package.json', 'package.json');
   },
 
-  writing: function () {
+  writing: function() {
     this.mkdir('lib');
     this.template('lib/name.js', 'lib/' + this.slugname + '.js');
 
@@ -271,7 +273,7 @@ module.exports = yeoman.generators.Base.extend({
     this.template('example/simple.js', 'example/simple.js');
   },
 
-  install: function () {
+  install: function() {
     this.installDependencies({
       bower: false,
       skipInstall: this.options['skip-install']
